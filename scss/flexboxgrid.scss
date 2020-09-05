@@ -1,14 +1,57 @@
-/* configurações iniciais */
-body{
-	margin: 0;
-	padding: 0;
+/*Funções*/
+
+@function gerar-coluna($coluna){
+
+	@return percentage($coluna/12);
 }
 
+@function class_vertical ($align_V){
+	@if $align_V == start  {
+		@return flex-start;
+	}
+
+	@if $align_V == center {
+		@return center;
+	}
+
+	@if $align_V == end {
+		@return flex-end;
+	}
+}
+
+@function class_horizontal ($align_H){
+	@if $align_H == top  {
+		@return flex-start;
+	}
+
+	@if $align_H == middle {
+		@return center;
+	}
+
+	@if $align_H == bottom {
+		@return flex-end;
+	}
+}
+
+@function distribuicao ($a_b){
+	@if $a_b == around  {
+		@return space-around;
+	}
+
+	@if $a_b == between {
+		@return space-between;
+	}
+}
+
+/*variaveis globais*/
+$alinhamento_vertical: start, center, end;
+$alinhamento_horizontal: top, middle, bottom;
+$distribuicao: around, between;
+
+/*configurações iniciais*/
 .container-fluid{
-	padding-right: 2rem;
-	padding-left: 2rem;
-	margin-left: auto;
-	margin-right: auto;
+	padding: 0 2rem;
+	margin: 0 auto;
 }
 
 .row{
@@ -16,208 +59,117 @@ body{
 	flex-wrap: wrap;
 }
 
-.collumn{
-	flex-direction: column;
+/*Todas as telas*/
+
+/*colunas*/
+@for $i from 1 through 12{
+
+	.col-#{$i}{
+		width: gerar-coluna($i);
+	}
 }
-
-/* Variaveis globais */
-$AH: start, center, end;
-$AV: top, middle, bottom;
-
-/* funções */
-
-@function gerarColunas($colunas){
-	$total: 12;
-
-	@return percentage($colunas/$total);
-}
-
 /*------------------------*/
-
-@function eixoVert($nome){
-
-	@if $nome == top {
-		@return flex-start;
-	} 
-
-	@if $nome == middle {
-		@return center;
-	}
-
-	@if $nome == bottom {
-		@return flex-end;
-	}
-
-}
-
-/*--------------------------*/
-
-@function eixoHoriz($nome){
-
-	@if $nome == start {
-		@return flex-start;
-	} 
-
-	@if $nome == center {
-		@return center;
-	}
-
-	@if $nome == end {
-		@return flex-end;
-	}
-
-}
-
-/* Telas */
-
-/* Para todas as telas */
-
-/* Colunas - geral */
-
-@for $i from 1 through 12 {
-	.col-#{$i} {
-		width: gerarColunas($i);
+@each $nome in $alinhamento_vertical {
+	.#{$nome}{
+		justify-content: class_vertical($nome);
 	}
 }
 
-/* Distribuição */
-
-.between{
-	justify-content: space-between;
+@each $nome in $alinhamento_horizontal {
+	.#{$nome}{
+		align-items: class_horizontal($nome);
+	}
+}
+/*----------------------------*/
+@each $nome in $distribuicao {
+	.#{$nome}{
+		justify-content: distribuicao($nome);
+	}
 }
 
-.around{
-	justify-content: space-around;
-}
-
-/* Tela pequena - sm */
-
-@media(max-width: 640px){
-
-	/* Colunas - sm */
-
+/*small devices - sm*/
+@media (max-width: 640px){
+	/*colunas*/
 	@for $i from 1 through 12{
+
 		.col-sm-#{$i}{
-			width: gerarColunas($i);
+			width: gerar-coluna($i);
 		}
 	}
-
-	/* Alinhamento Vertical - sm */
-
-	@each $nome in $AV{
+	/*---------------------------*/
+	@each $nome in $alinhamento_vertical {
 		.#{$nome}-sm{
-			align-items: eixoVert($nome);
+			justify-content: class_vertical($nome);
 		}
 	}
 
-	/* Alinhamento Horizontal - sm */
-
-	@each $nome in $AH{
+	@each $nome in $alinhamento_horizontal {
 		.#{$nome}-sm{
-			justify-content: eixoHoriz($nome);
+			align-items: class_horizontal($nome);
 		}
 	}
-
-	.container-fluid{
-		padding-right: 0.5rem;
-		padding-left: 0.5rem;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	/* Distribuição */
-
-	.between-sm{
-		justify-content: space-between;
-	}
-
-	.around-sm{
-		justify-content: space-around;
+	/*----------------------------*/
+	@each $nome in $distribuicao {
+		.#{$nome}-sm{
+			justify-content: distribuicao($nome);
+		}
 	}
 }
 
-/* Tela media - md */
-
-@media(min-width: 641px) and (max-width: 1007px){
-
-	/* Colunas - md */
-
+/*medium devices - md*/
+@media (min-width: 641px) and (max-width: 1007px){
+	/*colunas*/
 	@for $i from 1 through 12{
+
 		.col-md-#{$i}{
-			width: gerarColunas($i);
+			width: gerar-coluna($i);
 		}
 	}
-
-	/* Alinhamento Vertical - md */
-
-	@each $nome in $AV{
+	/*-----------------------------*/
+	@each $nome in $alinhamento_vertical {
 		.#{$nome}-md{
-			align-items: eixoVert($nome);
+			justify-content: class_vertical($nome);
 		}
 	}
 
-	/* Alinhamento Horizontal - md */
-
-	@each $nome in $AH{
+	@each $nome in $alinhamento_horizontal {
 		.#{$nome}-md{
-			justify-content: eixoHoriz($nome);
+			align-items: class_horizontal($nome);
 		}
 	}
-
-	.container-fluid{
-		padding-right: 1rem;
-		padding-left: 1rem;
-		margin-left: auto;
-		margin-right: auto;
+	/*----------------------------*/
+	@each $nome in $distribuicao {
+		.#{$nome}-md{
+			justify-content: distribuicao($nome);
+		}
 	}
-
-	/* Distribuição */
-
-	.between-md{
-		justify-content: space-between;
-	}
-
-	.around-md{
-		justify-content: space-around;
-	}
-
 }
 
-/* Tela grande - lg */
-
-@media(min-width: 1008px){
-
-	/* Colunas - lg */
-
+/*large devices - lg*/
+@media (min-width: 1008px){
+	/*colunas*/
 	@for $i from 1 through 12{
+
 		.col-lg-#{$i}{
-			width: gerarColunas($i);
+			width: gerar-coluna($i);
 		}
 	}
-
-	/* Alinhamento Vertical - lg */
-
-	@each $nome in $AV{
+	/*----------------------------------*/
+	@each $nome in $alinhamento_vertical {
 		.#{$nome}-lg{
-			align-items: eixoVert($nome);
+			justify-content: class_vertical($nome);
 		}
 	}
 
-	/* Alinhamento Horizontal - lg */
-
-	@each $nome in $AH{
+	@each $nome in $alinhamento_horizontal {
 		.#{$nome}-lg{
-			justify-content: eixoHoriz($nome);
+			align-items: class_horizontal($nome);
 		}
 	}
-
-	/* Distribuição */
-
-	.between-lg{
-		justify-content: space-between;
-	}
-
-	.around-lg{
-		justify-content: space-around;
+	/*----------------------------*/
+	@each $nome in $distribuicao {
+		.#{$nome}-lg{
+			justify-content: distribuicao($nome);
+		}
 	}
 }
